@@ -326,7 +326,7 @@ export default function App() {
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.0-flash",
         contents: prompt,
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,
@@ -387,9 +387,9 @@ export default function App() {
       const data = JSON.parse(response.text || '{}');
       setResult(data);
       setInput(''); // Clear input after successful processing to allow new additions
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setError('Veri işlenirken bir hata oluştu. Lütfen tekrar deneyin.');
+      setError(`Veri işlenirken bir hata oluştu: ${err.message || 'Lütfen tekrar deneyin.'}`);
     } finally {
       setLoading(false);
     }
