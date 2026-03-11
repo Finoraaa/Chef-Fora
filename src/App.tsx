@@ -326,7 +326,7 @@ export default function App() {
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.0-flash",
+        model: "gemini-3.1-flash-lite-preview",
         contents: prompt,
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,
