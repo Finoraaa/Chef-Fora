@@ -30,7 +30,9 @@ import {
   Activity,
   Clock,
   MessageSquare,
-  Send
+  Send,
+  Home,
+  Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -396,7 +398,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-[#2D2926] font-sans selection:bg-[#E6D5C3]">
+    <div className="min-h-screen bg-[#FDFCFB] text-[#2D2926] font-sans selection:bg-[#E6D5C3] pb-24 sm:pb-0">
       {/* Header */}
       <header className="border-b border-[#E6D5C3] bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -996,6 +998,39 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="sm:hidden fixed bottom-6 left-4 right-4 z-50">
+        <div className="bg-white/80 backdrop-blur-xl border border-[#E6D5C3] p-4 rounded-3xl shadow-2xl flex items-center justify-around">
+          <button 
+            onClick={() => setView('home')}
+            className={`flex flex-col items-center gap-1 transition-all ${view === 'home' ? 'text-[#5A5A40]' : 'text-[#5A5A40]/40'}`}
+          >
+            <Home size={20} className={view === 'home' ? 'scale-110' : ''} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Ana Sayfa</span>
+          </button>
+          
+          <div className="w-px h-6 bg-[#E6D5C3]/50" />
+          
+          <button 
+            onClick={() => setView('about')}
+            className={`flex flex-col items-center gap-1 transition-all ${view === 'about' ? 'text-[#5A5A40]' : 'text-[#5A5A40]/40'}`}
+          >
+            <Info size={20} className={view === 'about' ? 'scale-110' : ''} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Hakkında</span>
+          </button>
+          
+          <div className="w-px h-6 bg-[#E6D5C3]/50" />
+          
+          <button 
+            onClick={() => setView('feedback')}
+            className={`flex flex-col items-center gap-1 transition-all ${view === 'feedback' ? 'text-[#5A5A40]' : 'text-[#5A5A40]/40'}`}
+          >
+            <MessageSquare size={20} className={view === 'feedback' ? 'scale-110' : ''} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Destek</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
