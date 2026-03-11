@@ -202,6 +202,9 @@ export default function App() {
   const [result, setResult] = useState<AIResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [isSpeechSupported, setIsSpeechSupported] = useState(true);
+  const [speechError, setSpeechError] = useState<string | null>(null);
+  const [baseInput, setBaseInput] = useState('');
   const recognitionRef = useRef<any>(null);
 
   // Formspree Integration
@@ -231,8 +234,14 @@ export default function App() {
 
   // Initialize Speech Recognition
   useEffect(() => {
-    if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      setIsSpeechSupported(false);
+      return;
+    }
+
+    try {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
@@ -243,27 +252,46 @@ export default function App() {
         for (let i = 0; i < event.results.length; i++) {
           transcript += event.results[i][0].transcript;
         }
-        setInput(transcript);
+        // Use functional state update to ensure we always have the latest baseInput
+        setInput(prev => {
+          // If we are recording, we append to the base that was there when we started
+          return (baseInput || '') + transcript;
+        });
       };
 
       recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error', event.error);
+        if (event.error === 'not-allowed') {
+          setSpeechError('Mikrofon izni verilmedi. Lütfen tarayıcı ayarlarından izin verin.');
+        } else if (event.error === 'network') {
+          setSpeechError('Ağ bağlantısı hatası oluştu.');
+        } else {
+          setSpeechError('Ses tanıma sırasında bir hata oluşti.');
+        }
         setIsRecording(false);
       };
 
       recognitionRef.current.onend = () => {
         setIsRecording(false);
       };
+    } catch (err) {
+      console.error('Speech init error', err);
+      setIsSpeechSupported(false);
     }
-  }, []);
+  }, [baseInput]);
 
   const toggleRecording = () => {
+    setSpeechError(null);
     if (isRecording) {
       recognitionRef.current?.stop();
-      setIsRecording(false);
     } else {
-      recognitionRef.current?.start();
-      setIsRecording(true);
+      setBaseInput(input + (input.trim() ? ' ' : ''));
+      try {
+        recognitionRef.current?.start();
+        setIsRecording(true);
+      } catch (err) {
+        setSpeechError('Mikrofon başlatılamadı.');
+      }
     }
   };
 
@@ -459,17 +487,34 @@ export default function App() {
                       className="w-full h-32 p-6 bg-transparent resize-none focus:outline-none text-lg placeholder:text-[#5A5A40]/30"
                     />
                     <div className="flex items-center justify-between p-4 bg-[#FDFCFB] border-t border-[#E6D5C3]">
-                      <button
-                        onClick={toggleRecording}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
-                          isRecording 
-                            ? 'bg-red-50 text-red-600 animate-pulse' 
-                            : 'bg-[#5A5A40]/5 text-[#5A5A40] hover:bg-[#5A5A40]/10'
-                        }`}
-                      >
-                        {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
-                        <span className="text-sm font-semibold">{isRecording ? 'Dinleniyor...' : 'Sesle Anlat'}</span>
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={toggleRecording}
+                          disabled={!isSpeechSupported}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+                            !isSpeechSupported
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                              : isRecording 
+                                ? 'bg-red-50 text-red-600 animate-pulse' 
+                                : 'bg-[#5A5A40]/5 text-[#5A5A40] hover:bg-[#5A5A40]/10'
+                          }`}
+                        >
+                          {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
+                          <span className="text-sm font-semibold">
+                            {!isSpeechSupported ? 'Ses Desteklenmiyor' : isRecording ? 'Dinleniyor...' : 'Sesle Anlat'}
+                          </span>
+                        </button>
+                        {!isSpeechSupported && (
+                          <span className="text-[10px] text-[#5A5A40]/40 pl-2">
+                            Firefox'ta `media.webspeech.recognition.enable` ayarını açın veya Chrome kullanın.
+                          </span>
+                        )}
+                        {speechError && (
+                          <span className="text-[10px] text-red-500 pl-2 font-medium">
+                            {speechError}
+                          </span>
+                        )}
+                      </div>
                       <button
                         onClick={generateRecipes}
                         disabled={loading || !input.trim()}
