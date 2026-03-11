@@ -4,6 +4,8 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
+
+declare const process: any;
 import { useForm, ValidationError } from '@formspree/react';
 import { GoogleGenAI, Type } from "@google/genai";
 import { 
@@ -238,7 +240,7 @@ export default function App() {
 
       recognitionRef.current.onresult = (event: any) => {
         let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
+        for (let i = 0; i < event.results.length; i++) {
           transcript += event.results[i][0].transcript;
         }
         setInput(transcript);
@@ -284,6 +286,9 @@ export default function App() {
     setLoading(true);
     setError(null);
     try {
+      if (!process.env.GEMINI_API_KEY) {
+        throw new Error('GEMINI_API_KEY bulunamadı. Lütfen Vercel ayarlarından API anahtarınızı ekleyin.');
+      }
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       
       // Construct the prompt with context if existing ingredients exist
@@ -293,7 +298,7 @@ export default function App() {
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-1.5-flash",
         contents: prompt,
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,
