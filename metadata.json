@@ -1,0 +1,5 @@
+{
+  "name": "Şef Fora",
+  "description": "Yemek yapmayı sevenler için akıllı mutfak yardımcısı.",
+  "requestFramePermissions": ["microphone"]
+}
