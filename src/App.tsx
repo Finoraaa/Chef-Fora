@@ -8,12 +8,12 @@ import React, { useState, useRef, useEffect } from 'react';
 declare const process: any;
 import { useForm, ValidationError } from '@formspree/react';
 import { GoogleGenAI, Type } from "@google/genai";
-import { 
-  Mic, 
-  MicOff, 
-  ChefHat, 
-  Youtube, 
-  CheckCircle2, 
+import {
+  Mic,
+  MicOff,
+  ChefHat,
+  Youtube,
+  CheckCircle2,
   AlertCircle,
   Loader2,
   Sparkles,
@@ -177,7 +177,7 @@ function StepTimer({ text }: { text: string }) {
             {timeLeft === 0 ? 'Süre Doldu!' : formatTime(timeLeft!)}
           </span>
           {timeLeft !== 0 && (
-            <button 
+            <button
               onClick={() => setIsActive(!isActive)}
               className="hover:opacity-80 transition-opacity"
             >
@@ -235,7 +235,7 @@ export default function App() {
   // Initialize Speech Recognition
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
+
     if (!SpeechRecognition) {
       setIsSpeechSupported(false);
       return;
@@ -318,7 +318,7 @@ export default function App() {
         throw new Error('GEMINI_API_KEY bulunamadı. Lütfen Vercel ayarlarından API anahtarınızı ekleyin.');
       }
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      
+
       // Construct the prompt with context if existing ingredients exist
       let prompt = input;
       if (result && result.tanimlama_ekrani.malzemeler.length > 0) {
@@ -326,7 +326,7 @@ export default function App() {
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.1-flash",
+        model: "gemini-3.0-flash",
         contents: prompt,
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,
@@ -400,7 +400,7 @@ export default function App() {
       {/* Header */}
       <header className="border-b border-[#E6D5C3] bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div 
+          <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => setView('home')}
           >
@@ -410,25 +410,25 @@ export default function App() {
             <h1 className="text-xl font-serif font-bold tracking-tight">Şef Fora</h1>
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm font-medium text-[#5A5A40]/70">
-            <button 
+            <button
               onClick={() => scrollToSection(recipesRef)}
               className="hover:text-[#5A5A40] cursor-pointer transition-colors"
             >
               Tarifler
             </button>
-            <button 
+            <button
               onClick={() => scrollToSection(ingredientsRef)}
               className="hover:text-[#5A5A40] cursor-pointer transition-colors"
             >
               Malzemeler
             </button>
-            <button 
+            <button
               onClick={() => setView('about')}
               className={`hover:text-[#5A5A40] cursor-pointer transition-colors ${view === 'about' ? 'text-[#5A5A40] font-bold' : ''}`}
             >
               Hakkında
             </button>
-            <button 
+            <button
               onClick={() => setView('feedback')}
               className={`hover:text-[#5A5A40] cursor-pointer transition-colors ${view === 'feedback' ? 'text-[#5A5A40] font-bold' : ''}`}
             >
@@ -457,7 +457,7 @@ export default function App() {
                   <Sparkles size={14} />
                   Mutfak Arkadaşın Fora
                 </motion.div>
-                <motion.h2 
+                <motion.h2
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="text-4xl sm:text-5xl font-serif font-bold mb-4 leading-tight"
@@ -465,7 +465,7 @@ export default function App() {
                   Bugün Ne <br />
                   <span className="text-[#5A5A40] italic">Pişirsek?</span>
                 </motion.h2>
-                <motion.p 
+                <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
@@ -491,13 +491,12 @@ export default function App() {
                         <button
                           onClick={toggleRecording}
                           disabled={!isSpeechSupported}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
-                            !isSpeechSupported
+                          className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${!isSpeechSupported
                               ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                              : isRecording 
-                                ? 'bg-red-50 text-red-600 animate-pulse' 
+                              : isRecording
+                                ? 'bg-red-50 text-red-600 animate-pulse'
                                 : 'bg-[#5A5A40]/5 text-[#5A5A40] hover:bg-[#5A5A40]/10'
-                          }`}
+                            }`}
                         >
                           {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
                           <span className="text-sm font-semibold">
@@ -527,7 +526,7 @@ export default function App() {
                   </div>
                 </div>
                 {error && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-4 flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-xl border border-red-100"
@@ -566,7 +565,7 @@ export default function App() {
                           >
                             <span className="font-semibold text-[#5A5A40]">{item.isim}</span>
                             <span className="text-xs text-[#5A5A40]/50 bg-[#5A5A40]/5 px-2 py-0.5 rounded-full">{item.miktar}</span>
-                            <button 
+                            <button
                               onClick={() => removeIngredient(idx)}
                               className="ml-1 text-[#5A5A40]/20 hover:text-red-500 transition-colors"
                               title="Sil"
@@ -613,7 +612,7 @@ export default function App() {
                                     <Youtube size={18} />
                                     Tarifi İzle
                                   </a>
-                                  
+
                                   {/* Nutrition Summary */}
                                   <div className="bg-[#5A5A40]/5 border border-[#5A5A40]/10 rounded-2xl p-4">
                                     <div className="flex items-center gap-2 mb-3 text-[#5A5A40]">
@@ -651,11 +650,11 @@ export default function App() {
                                   </div>
                                   <div className="space-y-6">
                                     {recipe.adimlarlar.map((step, sIdx) => (
-                                      <motion.div 
+                                      <motion.div
                                         initial={{ x: -10, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
                                         transition={{ delay: 0.4 + sIdx * 0.05 }}
-                                        key={sIdx} 
+                                        key={sIdx}
                                         className="flex gap-6 items-start group/step"
                                       >
                                         <span className="w-8 h-8 rounded-full bg-[#5A5A40]/5 flex items-center justify-center text-[#5A5A40] font-serif italic shrink-0 group-hover/step:bg-[#5A5A40] group-hover/step:text-white transition-colors">
@@ -679,7 +678,7 @@ export default function App() {
                     </section>
 
                     {/* Finora Note */}
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="pt-8 border-t border-[#E6D5C3] text-center"
@@ -694,7 +693,7 @@ export default function App() {
 
               {/* Empty State */}
               {!result && !loading && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="flex flex-col items-center justify-center py-20 text-[#5A5A40]/30"
@@ -726,7 +725,7 @@ export default function App() {
               exit={{ opacity: 0, x: -20 }}
               className="max-w-3xl mx-auto py-12"
             >
-              <button 
+              <button
                 onClick={() => setView('home')}
                 className="flex items-center gap-2 text-[#5A5A40] mb-12 hover:gap-3 transition-all font-medium"
               >
@@ -736,17 +735,17 @@ export default function App() {
 
               <div className="bg-white border border-[#E6D5C3] rounded-[2.5rem] p-10 sm:p-16 shadow-xl shadow-[#5A5A40]/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-[#5A5A40]/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-                
+
                 <div className="relative z-10">
                   <div className="w-16 h-16 bg-[#5A5A40] rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-[#5A5A40]/20">
                     <Sparkles size={32} />
                   </div>
-                  
+
                   <h2 className="text-4xl font-serif font-bold mb-6">Hakkında</h2>
                   <p className="text-xl text-[#5A5A40]/80 mb-12 leading-relaxed">
                     Şef Fora, mutfakta yaratıcılığını konuşturman için tasarlandı. Elindeki malzemeleri en iyi şekilde değerlendirmen için sana rehberlik eden akıllı bir mutfak arkadaşıdır.
                   </p>
-                  
+
                   <div className="space-y-8">
                     <div className="p-6 bg-[#FDFCFB] rounded-3xl border border-[#E6D5C3]/50">
                       <p className="text-sm font-bold uppercase tracking-widest text-[#5A5A40]/40 mb-4">Geliştirici Notu</p>
@@ -756,9 +755,9 @@ export default function App() {
                     <div>
                       <p className="text-sm font-bold uppercase tracking-widest text-[#5A5A40]/40 mb-6">Beni Takip Et</p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <a 
-                          href="https://www.instagram.com/__finora__/" 
-                          target="_blank" 
+                        <a
+                          href="https://www.instagram.com/__finora__/"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-4 p-4 bg-white border border-[#E6D5C3] rounded-2xl hover:border-[#5A5A40] hover:shadow-md transition-all group"
                         >
@@ -769,9 +768,9 @@ export default function App() {
                           <ExternalLink size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
 
-                        <a 
-                          href="https://x.com/Furkan_Denizzz" 
-                          target="_blank" 
+                        <a
+                          href="https://x.com/Furkan_Denizzz"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-4 p-4 bg-white border border-[#E6D5C3] rounded-2xl hover:border-[#5A5A40] hover:shadow-md transition-all group"
                         >
@@ -782,9 +781,9 @@ export default function App() {
                           <ExternalLink size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
 
-                        <a 
-                          href="https://github.com/Finoraaa" 
-                          target="_blank" 
+                        <a
+                          href="https://github.com/Finoraaa"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-4 p-4 bg-white border border-[#E6D5C3] rounded-2xl hover:border-[#5A5A40] hover:shadow-md transition-all group"
                         >
@@ -795,9 +794,9 @@ export default function App() {
                           <ExternalLink size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
 
-                        <a 
-                          href="https://finora-portfolio.vercel.app/" 
-                          target="_blank" 
+                        <a
+                          href="https://finora-portfolio.vercel.app/"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-4 p-4 bg-white border border-[#E6D5C3] rounded-2xl hover:border-[#5A5A40] hover:shadow-md transition-all group"
                         >
@@ -821,7 +820,7 @@ export default function App() {
               exit={{ opacity: 0, x: -20 }}
               className="max-w-3xl mx-auto py-12"
             >
-              <button 
+              <button
                 onClick={() => setView('home')}
                 className="flex items-center gap-2 text-[#5A5A40] mb-12 hover:gap-3 transition-all font-medium"
               >
@@ -831,19 +830,19 @@ export default function App() {
 
               <div className="bg-white border border-[#E6D5C3] rounded-[2.5rem] p-10 sm:p-16 shadow-xl shadow-[#5A5A40]/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-[#5A5A40]/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-                
+
                 <div className="relative z-10">
                   <div className="w-16 h-16 bg-[#5A5A40] rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-[#5A5A40]/20">
                     <MessageSquare size={32} />
                   </div>
-                  
+
                   <h2 className="text-4xl font-serif font-bold mb-6">Geri Bildirim</h2>
                   <p className="text-xl text-[#5A5A40]/80 mb-12 leading-relaxed">
                     Şef Fora'yı geliştirmemize yardımcı ol! Önerilerin, karşılaştığın hatalar veya sadece merhaba demek için bize yazabilirsin.
                   </p>
 
                   {state.succeeded ? (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="bg-green-50 border border-green-100 p-10 rounded-[2rem] text-center"
@@ -853,7 +852,7 @@ export default function App() {
                       </div>
                       <h3 className="text-2xl font-serif font-bold text-green-900 mb-2">Teşekkürler!</h3>
                       <p className="text-green-700 mb-8">Mesajın başarıyla iletildi. Şef Fora'yı seninle birlikte geliştiriyoruz.</p>
-                      <button 
+                      <button
                         onClick={() => window.location.reload()}
                         className="text-green-700 font-bold underline underline-offset-4"
                       >
@@ -861,14 +860,14 @@ export default function App() {
                       </button>
                     </motion.div>
                   ) : (
-                    <form 
+                    <form
                       onSubmit={handleSubmit}
                       className="space-y-6"
                     >
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-[#5A5A40]/40 ml-1">Adın</label>
-                          <input 
+                          <input
                             required
                             id="name"
                             name="name"
@@ -879,7 +878,7 @@ export default function App() {
                         </div>
                         <div className="space-y-2">
                           <label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-[#5A5A40]/40 ml-1">E-posta</label>
-                          <input 
+                          <input
                             required
                             id="email"
                             name="email"
@@ -887,8 +886,8 @@ export default function App() {
                             placeholder="finora@example.com"
                             className="w-full p-4 bg-[#FDFCFB] border border-[#E6D5C3] rounded-2xl focus:outline-none focus:border-[#5A5A40] transition-colors"
                           />
-                          <ValidationError 
-                            prefix="Email" 
+                          <ValidationError
+                            prefix="Email"
                             field="email"
                             errors={state.errors}
                             className="text-red-500 text-xs mt-1 ml-1"
@@ -904,12 +903,11 @@ export default function App() {
                             <button
                               key={cat}
                               type="button"
-                              onClick={() => setFeedbackForm({...feedbackForm, category: cat})}
-                              className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
-                                feedbackForm.category === cat 
-                                  ? 'bg-[#5A5A40] border-[#5A5A40] text-white' 
+                              onClick={() => setFeedbackForm({ ...feedbackForm, category: cat })}
+                              className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${feedbackForm.category === cat
+                                  ? 'bg-[#5A5A40] border-[#5A5A40] text-white'
                                   : 'bg-white border-[#E6D5C3] text-[#5A5A40] hover:border-[#5A5A40]'
-                              }`}
+                                }`}
                             >
                               {cat.charAt(0).toUpperCase() + cat.slice(1)}
                             </button>
@@ -919,7 +917,7 @@ export default function App() {
 
                       <div className="space-y-2">
                         <label htmlFor="message" className="text-xs font-bold uppercase tracking-widest text-[#5A5A40]/40 ml-1">Mesajın</label>
-                        <textarea 
+                        <textarea
                           required
                           id="message"
                           name="message"
@@ -927,15 +925,15 @@ export default function App() {
                           placeholder="Şef Fora'ya bir şeyler yaz..."
                           className="w-full p-4 bg-[#FDFCFB] border border-[#E6D5C3] rounded-2xl focus:outline-none focus:border-[#5A5A40] transition-colors resize-none"
                         />
-                        <ValidationError 
-                          prefix="Message" 
+                        <ValidationError
+                          prefix="Message"
                           field="message"
                           errors={state.errors}
                           className="text-red-500 text-xs mt-1 ml-1"
                         />
                       </div>
 
-                      <button 
+                      <button
                         type="submit"
                         disabled={state.submitting}
                         className="w-full py-4 bg-[#5A5A40] text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-[#4A4A35] transition-all shadow-lg shadow-[#5A5A40]/20 disabled:opacity-50"
@@ -963,7 +961,7 @@ export default function App() {
             yemek yapmayı sevenler için akıllı mutfak yardımcısı.
           </p>
           <div className="flex items-center justify-center gap-8 text-[#5A5A40]/60 mb-8">
-            <button 
+            <button
               onClick={() => scrollToSection(recipesRef)}
               className="flex flex-col items-center gap-1 hover:text-[#5A5A40] transition-colors"
             >
@@ -971,7 +969,7 @@ export default function App() {
               <span className="text-[10px] uppercase tracking-widest font-bold">Tarifler</span>
             </button>
             <div className="w-px h-8 bg-[#E6D5C3]" />
-            <button 
+            <button
               onClick={() => scrollToSection(ingredientsRef)}
               className="flex flex-col items-center gap-1 hover:text-[#5A5A40] transition-colors"
             >
@@ -979,7 +977,7 @@ export default function App() {
               <span className="text-[10px] uppercase tracking-widest font-bold">Sonuçlar</span>
             </button>
             <div className="w-px h-8 bg-[#E6D5C3]" />
-            <button 
+            <button
               onClick={() => setView('about')}
               className="flex flex-col items-center gap-1 hover:text-[#5A5A40] transition-colors"
             >
